@@ -1,0 +1,12 @@
+#####################eclipse/idea ignore add by bjj ############
+*.settings/
+*.classpath
+*.project
+*.iml
+*.idea
+/*/target/
+/*/bin/
+.git/
+.git
+.idea/
+/target/
