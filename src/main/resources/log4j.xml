@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- - Copyright 1999-2011 Alibaba Group. - - Licensed under the Apache License,
+	Version 2.0 (the "License"); - you may not use this file except in compliance
+	with the License. - You may obtain a copy of the License at - - http://www.apache.org/licenses/LICENSE-2.0
+	- - Unless required by applicable law or agreed to in writing, software -
+	distributed under the License is distributed on an "AS IS" BASIS, - WITHOUT
+	WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. - See the
+	License for the specific language governing permissions and - limitations
+	under the License. -->
+<!DOCTYPE log4j:configuration SYSTEM "log4j.dtd">
+<log4j:configuration xmlns:log4j="http://jakarta.apache.org/log4j/" debug="false">
+	<appender name="PROJECT" class="org.apache.log4j.DailyRollingFileAppender">
+		<param name="file" value="${logging_root}/sys/${app_name}.log" />
+		<param name="append" value="true" />
+		<param name="encoding" value="UTF-8" />
+		<param name="threshold" value="INFO"/>
+		<param name="MaxFileSize" value="100MB"/>
+		<param name="MaxBackupIndex" value="30"/>
+		<layout class="org.apache.log4j.PatternLayout">
+			<param name="ConversionPattern" value="%d{yy-MM-dd.HH:mm:ss.SSS} [%-16t] %-5p %-22c{1}%X{ServiceId} - %m%n"/>
+		</layout>
+	</appender>
+
+	<appender name="RINGBUFFER"
+		class="com.duolabao.monitor.shared.logger.log4j.appender.RingBufferAppender">
+		<param name="threshold" value="INFO" />
+		<layout class="org.apache.log4j.PatternLayout">
+			<param name="ConversionPattern" value="%d{yy-MM-dd.HH:mm:ss.SSS} [%-16t] %-5p %-22c{1}%X{ServiceId} - %m%n"/>
+		</layout>
+	</appender>
+	<!-- begin event appender -->
+	<appender name="eventLoggerAppender" class="org.apache.log4j.DailyRollingFileAppender">
+		<param name="encoding" value="UTF-8" />
+		<param name="MaxFileSize" value="100MB"/>
+		<param name="MaxBackupIndex" value="30"/>
+		<param name="file" value="${logging_root}/peanut/event/eventLogger.log" />
+		<layout class="org.apache.log4j.PatternLayout">
+			<param name="ConversionPattern" value="%d{yy-MM-dd.HH:mm:ss.SSS} [%-16t] %-5p %-22c{1}%X{ServiceId} - %m%n"/>
+		</layout>
+	</appender>
+	<!-- threadpool error -->
+	<!-- begin web exception appender -->
+	<appender name="webExceptionLoggerAppender" class="org.apache.log4j.DailyRollingFileAppender">
+		<param name="encoding" value="UTF-8" />
+		<param name="MaxFileSize" value="100MB"/>
+		<param name="MaxBackupIndex" value="30"/>
+		<param name="file" value="${logging_root}/web/exception/web-exception.log" />
+		<layout class="org.apache.log4j.PatternLayout">
+			<param name="ConversionPattern" value="%d{yy-MM-dd.HH:mm:ss.SSS} [%-16t] %-5p %-22c{1}%X{ServiceId} - %m%n"/>
+		</layout>
+	</appender>
+	<!-- web exception error -->
+	<appender name="threadPoolExceptionLoggerAppender" class="org.apache.log4j.DailyRollingFileAppender">
+		<param name="MaxFileSize" value="100MB"/>
+		<param name="MaxBackupIndex" value="30"/>
+		<param name="file" value="${logging_root}/peanut/event/thread-pool-exception.log" />
+		<layout class="org.apache.log4j.PatternLayout">
+			<param name="ConversionPattern" value="%d{yy-MM-dd.HH:mm:ss.SSS} [%-16t] %-5p %-22c{1}%X{ServiceId} - %m%n"/>
+		</layout>
+	</appender>
+	<!-- monitor pool dump log -->
+	<appender name="threadPoolDumpLoggerAppender" class="org.apache.log4j.DailyRollingFileAppender">
+		<param name="MaxFileSize" value="100MB"/>
+		<param name="MaxBackupIndex" value="30"/>
+		<param name="file" value="${logging_root}/peanut/event/monitor-thread-pool-dump.log" />
+		<layout class="org.apache.log4j.PatternLayout">
+			<param name="ConversionPattern" value="%d{yy-MM-dd.HH:mm:ss.SSS} [%-16t] %-5p %-22c{1}%X{ServiceId} - %m%n"/>
+		</layout>
+	</appender>
+	<!-- rejected -->
+	<appender name="logRejectedTaskLoggerAppender" class="org.apache.log4j.DailyRollingFileAppender">
+		<param name="MaxFileSize" value="100MB"/>
+		<param name="MaxBackupIndex" value="30"/>
+		<param name="file" value="${logging_root}/peanut/event/rejected-task.log" />
+		<layout class="org.apache.log4j.PatternLayout">
+			<param name="ConversionPattern" value="%d{yy-MM-dd.HH:mm:ss.SSS} [%-16t] %-5p %-22c{1}%X{ServiceId} - %m%n"/>
+		</layout>
+	</appender>
+	<!-- begin rule appender -->
+	<appender name="ruleLoggerAppender" class="org.apache.log4j.DailyRollingFileAppender">
+		<param name="encoding" value="UTF-8" />
+		<param name="MaxFileSize" value="100MB"/>
+		<param name="MaxBackupIndex" value="30"/>
+		<param name="file" value="${logging_root}/peanut/rule/ruleLogger.log" />
+		<layout class="org.apache.log4j.PatternLayout">
+			<param name="ConversionPattern" value="%d{yy-MM-dd.HH:mm:ss.SSS} [%-16t] %-5p %-22c{1}%X{ServiceId} - %m%n"/>
+		</layout>
+	</appender>
+	<!-- end -->
+
+	<appender name="asyncRingBufferAppender" class="org.apache.log4j.AsyncAppender">
+		<param name="BufferSize" value="2048" />
+		<param name="Blocking" value="false" />
+		<appender-ref ref="RINGBUFFER" />
+	</appender>
+	<!-- begin logger -->
+	<!-- event logger -->
+	<logger name="eventLogger" additivity="false">
+		<level value="INFO" />
+		<appender-ref ref="eventLoggerAppender" />
+		<appender-ref ref="asyncRingBufferAppender" />
+	</logger>
+	<logger name="webExceptionLogger" additivity="false">
+		<level value="INFO" />
+		<appender-ref ref="webExceptionLoggerAppender" />
+		<appender-ref ref="asyncRingBufferAppender" />
+	</logger>
+
+	<!-- 线程池异常信息或者线程中未被捕获的异常，日志记录 -->
+	<logger name="threadPoolExceptionLogger" additivity="false">
+		<level value="INFO" />
+		<appender-ref ref="threadPoolExceptionLoggerAppender" />
+		<appender-ref ref="asyncRingBufferAppender" />
+	</logger>
+	<!-- monitor thread pool dump logger -->
+	<logger name="threadPoolDumpLogger" additivity="false">
+		<level value="INFO" />
+		<appender-ref ref="threadPoolDumpLoggerAppender" />
+		<appender-ref ref="asyncRingBufferAppender" />
+	</logger>
+	<!-- 队列满被拒绝的线程，日志记录 -->
+	<logger name="logRejectedTaskLogger" additivity="false">
+		<level value="INFO" />
+		<appender-ref ref="logRejectedTaskLoggerAppender" />
+		<appender-ref ref="asyncRingBufferAppender" />
+	</logger>
+	<!-- rule logger -->
+	<logger name="ruleLogger" additivity="false">
+		<level value="INFO" />
+		<appender-ref ref="ruleLoggerAppender" />
+		<appender-ref ref="asyncRingBufferAppender" />
+	</logger>
+	<!-- end -->
+	<root>
+		<level value="INFO" />
+		<appender-ref ref="PROJECT" />
+		<appender-ref ref="asyncRingBufferAppender" />
+	</root>
+</log4j:configuration>
